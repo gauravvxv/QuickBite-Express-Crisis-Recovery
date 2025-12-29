@@ -63,3 +63,21 @@ from orders o
 inner join delivery d
 on o.order_id = d.order_id
 where o.is_cancelled = 'N';
+
+-- Q7. Did late deliveries increase cancellations?
+
+select 
+case
+ when d.actual_delivery_time_mins > expected_delivery_time_mins 
+ then 'Late'
+ else 'On-Time'
+ end as delivery_status,
+count(*) as total_orders,
+sum(case when o.is_cancelled = 'Y' then 1 else 0 end) as cancelled_orders,
+round( 100.0 * sum(case when o.is_cancelled = 'Y' then 1 else 0 end) / count(*),2) as cancellation_rate
+from orders o
+inner join delivery d
+on o.order_id = d.order_id
+ group by delivery_status;
+
+
