@@ -41,3 +41,25 @@ from pre_june
 left join in_june
 on pre_june.customer_id = in_june.customer_id;
 
+-- Q5. Average Delivery time by phase
+select orders.crisis_phase,round(Avg(actual_delivery_time_mins),2) as average_delivery_time_mins from orders
+inner join delivery
+on orders.order_id = delivery.order_id
+where orders.is_cancelled = 'N'
+group by orders.crisis_phase;
+
+-- Q6. % of orders that were late
+select 
+round(
+100.0 *
+sum(
+case
+ when d.actual_delivery_time_mins > d.expected_delivery_time_mins
+ then 1 else 0
+ end
+) / count(*)
+,2) as late_order_percentage
+from orders o
+inner join delivery d
+on o.order_id = d.order_id
+where o.is_cancelled = 'N';
