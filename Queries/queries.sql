@@ -80,4 +80,105 @@ inner join delivery d
 on o.order_id = d.order_id
  group by delivery_status;
 
+--  Q8. Average Rating per phase
+select 
+o.crisis_phase,
+round(avg(r.rating)::numeric,2) from orders o 
+inner join rating r
+on o.order_id = r.order_id
+group by o.crisis_phase;
 
+-- Q9. Restaurants with most 1-star reviews in crisis
+select
+r.restaurant_name,
+count(*) as one_star
+from restaurants r
+inner join rating ra
+on r.restaurant_id = ra.restaurant_id
+inner join orders o
+on o.order_id = ra.order_id
+where ra.rating = 1 
+and o.crisis_phase = 'Crisis'
+group by restaurant_name;
+
+-- Q10. Restaurants with high revenue but low ratings
+select 
+r.restaurant_name,
+round(sum(total_amount)::numeric,2) as revenue,
+round(avg(ra.rating)::numeric,2) as average_rating
+from restaurants r
+inner join orders o
+on r.restaurant_id = o.restaurant_id
+inner join rating ra
+on o.order_id = ra.order_id
+group by r.restaurant_name
+having avg(ra.rating) < 3
+order by revenue desc;
+
+-- Q11. Restaurants with highest order growth in recovery
+select 
+r.restaurant_name,
+sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end) as crisis_orders,
+sum(case when o.crisis_phase = 'Recovery' then 1 else 0 end) as recovery_orders,
+sum(case when o.crisis_phase = 'Recovery' then 1 else 0 end)
+-
+sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end) as order_growth
+from orders o
+inner join restaurants r
+on o.restaurant_id = r.restaurant_id
+group by r.restaurant_name
+order by order_growth desc
+limit 10;
+
+-- Q12: Which partner type performs better?
+select 
+r.partner_type,
+count(distinct r.restaurant_id) as total_restaurants,
+count(o.order_id) as total_orders,
+round(sum(total_amount)::numeric,2) as total_amount
+from orders o
+inner join restaurants r
+on o.restaurant_id = r.restaurant_id
+group by r.partner_type
+order by total_amount desc;
+
+-- Q13. Which city is recovering fast?
+select 
+r.city,
+sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end) as crisis_orders,
+sum(case when o.crisis_phase = 'Recovery' then 1 else 0 end) as recovery_orders,
+-- Order growth
+sum(case when o.crisis_phase = 'Recovery' then 1 else 0 end)
+-
+sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end) as order_growth,
+-- Recovery Percentage
+round(
+100.00 * (
+sum(case when o.crisis_phase = 'Recovery' then 1 else 0 end) 
+-
+sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end)
+)
+/ sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end)
+,2)  as recovery_percentage
+from restaurants r
+inner join orders o 
+on r.restaurant_id = o.restaurant_id
+group by r.city
+order by recovery_percentage desc;
+
+-- Q14. Which acquisition channel brings better returning users?
+select 
+c.acquisition_channel,
+count(distinct c.customer_id) as total_customers,
+count(distinct case when orders.total_orders > 1 then c.customer_id end) as returning_customers,
+round(
+100.0 * count(distinct case when orders.total_orders > 1 then c.customer_id end)
+/ count(distinct c.customer_id),2
+) as returning_percentage
+from customers c
+inner join (
+select customer_id, count(order_id) as total_orders from orders group by customer_id
+) as orders 
+on c.customer_id = orders.customer_id
+group by acquisition_channel
+order by returning_percentage desc;
