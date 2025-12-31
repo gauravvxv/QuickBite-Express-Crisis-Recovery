@@ -142,7 +142,28 @@ on o.restaurant_id = r.restaurant_id
 group by r.partner_type
 order by total_amount desc;
 
--- Q13. Which city is recovering fast?
+-- Q13. Which top 5 city groups experienced the highest percentage decline in orders during the crisis period compared to the pre-crisis period? 
+select 
+r.city,
+sum(case when o.crisis_phase = 'Pre-Crisis' then 1 else 0 end) as pre_crisis_orders,
+sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end) as crisis_orders,
+-- Decline Percentage
+round(
+100 *
+(
+sum(case when crisis_phase = 'Pre-Crisis' then 1 else 0 end) 
+-
+sum(case when crisis_phase = 'Crisis' then 1 else 0 end)
+)/ sum(case when crisis_phase = 'Pre-Crisis' then 1 else 0 end)
+,2) as decline_percentage
+from
+restaurants r
+inner join orders o
+on r.restaurant_id = o.restaurant_id
+group by r.city
+order by decline_percentage desc;
+
+-- Q14. Which city is recovering fast?
 select 
 r.city,
 sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end) as crisis_orders,
@@ -166,7 +187,7 @@ on r.restaurant_id = o.restaurant_id
 group by r.city
 order by recovery_percentage desc;
 
--- Q14. Which acquisition channel brings better returning users?
+-- Q15. Which acquisition channel brings better returning users?
 select 
 c.acquisition_channel,
 count(distinct c.customer_id) as total_customers,
@@ -182,3 +203,4 @@ select customer_id, count(order_id) as total_orders from orders group by custome
 on c.customer_id = orders.customer_id
 group by acquisition_channel
 order by returning_percentage desc;
+
