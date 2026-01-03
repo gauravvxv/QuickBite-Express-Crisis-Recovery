@@ -142,20 +142,20 @@ on o.restaurant_id = r.restaurant_id
 group by r.partner_type
 order by total_amount desc;
 
--- Q13. Which top 5 city groups experienced the highest percentage decline in orders during the crisis period compared to the pre-crisis period? 
+-- Q13. Which city experienced the highest percentage decline in orders during the crisis period compared to the pre-crisis period? 
 select 
 r.city,
-sum(case when o.crisis_phase = 'Pre-Crisis' then 1 else 0 end) as pre_crisis_orders,
-sum(case when o.crisis_phase = 'Crisis' then 1 else 0 end) as crisis_orders,
+round(sum(case when o.crisis_phase = 'Pre-Crisis' then 1 end) / 5.0,2) as avg_pre_crisis,
+sum(case when o.crisis_phase = 'Crisis' then 1 end) as crisis_orders,
 -- Decline Percentage
 round(
-100 *
+100.0 *
 (
-sum(case when crisis_phase = 'Pre-Crisis' then 1 else 0 end) 
--
-sum(case when crisis_phase = 'Crisis' then 1 else 0 end)
-)/ sum(case when crisis_phase = 'Pre-Crisis' then 1 else 0 end)
-,2) as decline_percentage
+(count(case when o.crisis_phase = 'Pre-Crisis' then 1 end) / 5.0)
+- count(case when o.crisis_phase = 'Crisis' then 1 end)
+)
+/ (count(case when o.crisis_phase = 'Pre-Crisis' then 1 end)/5.0),2
+) as decline_percentage
 from
 restaurants r
 inner join orders o
