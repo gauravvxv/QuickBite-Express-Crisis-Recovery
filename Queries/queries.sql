@@ -1,9 +1,10 @@
--- Q1. Total Orders by phase
+-- Q1. Compare total orders across pre-crisis (Jan–May 2025) vs crisis (Jun–Sep 2025). How severe is the decline?
 select 
-crisis_phase,
-count(order_id) as total_orders
-from orders
-group by crisis_phase;
+count(case when crisis_phase = 'Pre-Crisis' then 1 end) as pre_crisis_jan_may,
+count(case when crisis_phase in ('Crisis','Recovery') then 1 end) as crisis_jun_sep,
+count(distinct case when crisis_phase = 'Pre-Crisis' then order_month end) as pre_crisis_months,
+count(distinct case when crisis_phase in ('Crisis','Recovery') then order_month end) as crisis_months
+from orders;
 
 -- Q2. Revenue by phase
 select crisis_phase,
@@ -203,4 +204,19 @@ select customer_id, count(order_id) as total_orders from orders group by custome
 on c.customer_id = orders.customer_id
 group by acquisition_channel
 order by returning_percentage desc;
+
+-- Q16.  What is the cancellation rate trend pre-crisis vs crisis, and which cities are most affected?
+select
+r.city,
+o.crisis_phase,
+count(*) as total_orders,
+count(case when  o.is_cancelled = 'Y' then 1 end) as cancelled_orders,
+round(
+100.0 * count(case when o.is_cancelled = 'Y' then 1 end) / count(*),2
+) as cancellation_rate
+from orders o
+inner join restaurants r
+on o.restaurant_id = r.restaurant_id
+group by o.crisis_phase,r.city
+order by r.city;
 
