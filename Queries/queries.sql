@@ -7,10 +7,13 @@ count(distinct case when crisis_phase in ('Crisis','Recovery') then order_month 
 from orders;
 
 -- Q2. Revenue by phase
-select crisis_phase,
-round(sum(total_amount)::numeric,2) as total_amount
+select 
+crisis_phase,
+round(sum(total_amount)::numeric,2) as total_revenue,
+count(distinct order_month) as months
 from orders
-group by crisis_phase;
+group by crisis_phase 
+order by total_revenue desc;
 
 -- Q3. Active customers by phase
 select
@@ -220,3 +223,12 @@ on o.restaurant_id = r.restaurant_id
 group by o.crisis_phase,r.city
 order by r.city;
 
+-- Q17.track average customer rating month-by-month. Which months saw the sharpest drop?
+select
+o.order_month,
+round(avg(r.rating)::numeric,2) as average_rating
+from 
+orders o
+inner join rating r
+on o.order_id = r.order_id
+group by o.order_month;
