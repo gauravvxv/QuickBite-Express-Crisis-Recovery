@@ -15,6 +15,7 @@ from orders
 group by crisis_phase 
 order by total_revenue desc;
 
+
 -- Q3. Active customers by phase
 select
 crisis_phase,
