@@ -23,28 +23,30 @@ count(customer_id) as total_customers
 from orders  
 group by crisis_phase;
 
--- Q4. Customers who ordered before june but not in june and Customer churn?
+-- Q4. Customers who ordered before Crisis but not in Crisis and Customer churn?
 with pre_june as (
 select distinct customer_id
 from orders
 where order_timestamp < '2025-06-01'
 ),
-in_june as (
+in_crisis as (
 select distinct customer_id
 from orders
-where order_timestamp >='2025-06-01' and order_timestamp < '2025-07-01'
+where order_timestamp >='2025-06-01' and order_timestamp <= '2025-09-30'
 )
+
+
 
 select
 count(pre_june.customer_id) as total_before_june,
-count(in_june.customer_id) as total_in_june,
-count(pre_june.customer_id) - count(in_june.customer_id) as churned_customers,
+count(in_crisis.customer_id) as total_in_crisis,
+count(pre_june.customer_id) - count(in_crisis.customer_id) as churned_customers,
 round(
-(count(pre_june.customer_id) - count(in_june.customer_id)) * 100.0 / count(pre_june.customer_id),2
+(count(pre_june.customer_id) - count(in_crisis.customer_id)) * 100.0 / count(pre_june.customer_id),2
 ) as churned_percentage
 from pre_june 
-left join in_june
-on pre_june.customer_id = in_june.customer_id;
+left join in_crisis
+on pre_june.customer_id = in_crisis.customer_id
 
 -- Q5. Average Delivery time by phase
 select orders.crisis_phase,round(Avg(actual_delivery_time_mins),2) as average_delivery_time_mins from orders
