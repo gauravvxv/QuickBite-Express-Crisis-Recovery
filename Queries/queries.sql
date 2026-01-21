@@ -37,7 +37,7 @@ where order_timestamp >='2025-06-01' and order_timestamp <= '2025-09-30'
 
 select
 count(pre_june.customer_id) as total_before_june,
-count(in_crisis.customer_id) as total_in_crisis,
+count(in_crisis.customer_id) as return_in_crisis,
 count(pre_june.customer_id) - count(in_crisis.customer_id) as churned_customers,
 round(
 (count(pre_june.customer_id) - count(in_crisis.customer_id)) * 100.0 / count(pre_june.customer_id),2
