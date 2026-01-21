@@ -6,14 +6,24 @@ count(distinct case when crisis_phase = 'Pre-Crisis' then order_month end) as pr
 count(distinct case when crisis_phase in ('Crisis','Recovery') then order_month end) as crisis_months
 from orders;
 
--- Q2. Revenue by phase
-select 
-crisis_phase,
-round(sum(total_amount)::numeric,2) as total_revenue,
-count(distinct order_month) as months
-from orders
-group by crisis_phase 
-order by total_revenue desc;
+-- Q2. Total Revenue before Crisis, in Crisis , revenue loss and revenue drop percentage
+WITH revenue AS (
+    SELECT
+        SUM(CASE WHEN crisis_phase = 'Pre-Crisis' THEN total_amount END) AS pre_crisis_revenue,
+        SUM(CASE WHEN crisis_phase IN ('Crisis', 'Recovery') THEN total_amount END) AS crisis_revenue
+    FROM orders
+)
+
+SELECT
+    ROUND(pre_crisis_revenue::numeric, 2) AS pre_crisis_revenue,
+    ROUND(crisis_revenue::numeric, 2) AS crisis_revenue,
+    ROUND((pre_crisis_revenue - crisis_revenue)::numeric, 2) AS revenue_loss,
+    ROUND(
+        ((pre_crisis_revenue - crisis_revenue) * 100.0 / pre_crisis_revenue)::numeric,
+        2
+    ) AS revenue_drop_percentage
+FROM revenue;
+
 
 
 -- Q3. Active customers by phase
