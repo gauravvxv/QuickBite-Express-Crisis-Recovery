@@ -98,7 +98,8 @@ on o.order_id = d.order_id
 --  Q8. Average Rating per phase
 select 
 o.crisis_phase,
-round(avg(r.rating)::numeric,2) from orders o 
+round(avg(r.rating)::numeric,2) as average_rating
+from orders o 
 inner join rating r
 on o.order_id = r.order_id
 group by o.crisis_phase;
