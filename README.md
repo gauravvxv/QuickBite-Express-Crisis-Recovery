@@ -96,7 +96,8 @@ QuickBite Express, founded in 2020, faced a significant crisis in June 2025 due 
 
 ### 1️⃣ Crisis Overview Dashboard
 
-![Crisis Overview](assets/crisis_overview.png)
+<img width="726" height="410" alt="Crisis Overview" src="https://github.com/user-attachments/assets/3ebf666d-02fb-491a-89ed-b27fac7f97c6" />
+
 
 **Highlights:**
 
@@ -108,7 +109,8 @@ QuickBite Express, founded in 2020, faced a significant crisis in June 2025 due 
 
 ### 2️⃣ Delivery & Rating Dashboard
 
-![Delivery & Rating](assets/delivery_rating.png)
+<img width="724" height="410" alt="devliery" src="https://github.com/user-attachments/assets/f1c40746-71bd-4c3c-966f-8a2e4d948d77" />
+
 
 **Highlights:**
 
@@ -120,7 +122,8 @@ QuickBite Express, founded in 2020, faced a significant crisis in June 2025 due 
 
 ### 3️⃣ Customer Experience Dashboard
 
-![Customer Experience](assets/customer_experience.png)
+<img width="726" height="409" alt="Customer" src="https://github.com/user-attachments/assets/2e245b13-73cc-4099-a64a-c385ff3a8b10" />
+
 
 **Highlights:**
 
@@ -132,7 +135,8 @@ QuickBite Express, founded in 2020, faced a significant crisis in June 2025 due 
 
 ### 4️⃣ City & Restaurant Impact Dashboard
 
-![City Impact](assets/city_restaurant_impact.png)
+<img width="736" height="412" alt="city" src="https://github.com/user-attachments/assets/de8bb46a-8316-4d30-8e66-e2704ed001dd" />
+
 
 **Highlights:**
 
@@ -144,7 +148,8 @@ QuickBite Express, founded in 2020, faced a significant crisis in June 2025 due 
 
 ### 5️⃣ Recovery Performance Dashboard
 
-![Recovery](assets/recovery_dashboard.png)
+<img width="732" height="409" alt="Recovery" src="https://github.com/user-attachments/assets/8cae9988-babc-4db5-9de2-f71308085a59" />
+
 
 **Highlights:**
 
