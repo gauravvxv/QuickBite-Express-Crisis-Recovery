@@ -190,7 +190,7 @@ QuickBite Express, founded in 2020, faced a significant crisis in June 2025 due 
 
 ## 📽️ Project Presentation
 
-👉 [View Project Presentation](link-to-presentation)
+👉 [View Project Presentation](https://docs.google.com/presentation/d/1n8ETPXH0o8b78heyyQfRf6dyS1oIowrU-OKFpRRmZVk/edit?usp=sharing)
 
 ---
 
